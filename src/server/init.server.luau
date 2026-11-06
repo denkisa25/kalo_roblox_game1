@@ -2,6 +2,11 @@ print("Hello world, from server!")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Brainrots = require(ReplicatedStorage.Shared.Config.Brainrots)
+local Tap = require(ReplicatedStorage.Shared.Config.Tap)
+
+local tapEvent = Instance.new("RemoteEvent")
+tapEvent.Name = "Tap"
+tapEvent.Parent = ReplicatedStorage
 
 print(Brainrots.la_vacca.multiplier)
 local Players = game:GetService("Players")
@@ -26,4 +31,10 @@ end)
 
 Players.PlayerRemoving:Connect(function(player)
 	playerData[player] = nil
+end)
+
+tapEvent.OnServerEvent:Connect(function(player)
+	local data = playerData[player]
+	data.rotJuice = data.rotJuice + Tap.baseReward
+	player.leaderstats["Rot Juice"].Value = data.rotJuice
 end)
